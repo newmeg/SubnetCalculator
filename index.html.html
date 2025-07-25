@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub Applicazioni di Rete</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        /* Definizione delle variabili CSS per la palette colori e il tema */
+        :root {
+            --primary-color: #00b894; /* Verde Acqua Brillante */
+            --secondary-color: #5294e2; /* Blu */
+            --bg-dark: #1e272e; /* Grigio Antracite Scuro */
+            --bg-card: #2d3436; /* Grigio Card */
+            --bg-input: #2c3e50; /* Grigio Input */
+            --text-light: #ffffff; /* Bianco Solido */
+            --text-muted: #8a8d93; /* Grigio Chiaro */
+            --border-color: #34495e; /* Grigio-Blu Bordo */
+            --error-color: #e74c3c; /* Rosso per errori */
+            --info-color: #3498db; /* Blu per info */
+        }
+
+        /* Stile generale del corpo della pagina */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Stile dell'header superiore */
+        .header {
+            background-color: var(--bg-card);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-left {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .header-right .db-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .db-status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+
+        .db-status button {
+            background: var(--bg-input);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+        }
+
+        .db-status button:hover {
+            background: var(--border-color);
+        }
+
+        /* Contenitore principale */
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Stile del titolo principale H1 */
+        h1 {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h1 .info-icon {
+            font-size: 18px;
+            color: var(--info-color);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        h1 .info-icon:hover {
+            color: var(--primary-color);
+        }
+
+        /* Stile per i tab di navigazione */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background-color: transparent;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--secondary-color);
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab-button:hover {
+            color: var(--text-light);
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            padding-top: 15px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 8px;
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        input, select, textarea {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background-color: var(--bg-input);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: -8px;
+            margin-bottom: 10px;
+            display: block;
+            height: 18px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #008f7a;
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+        
+        .results, .results-table {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .results h2, .results-table h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .results p {
+            margin-bottom: 8px;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .results p strong {
+            color: var(--text-light);
+        }
+
+        .results p span {
+            color: var(--text-muted);
+        }
+        
+        /* Stili per tabelle risultati */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+        th {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        td {
+            color: var(--text-muted);
+        }
+        td strong {
+            color: var(--text-light);
+        }
+
+        /* Stile della modale */
+        .modal {
+            /* CORREZIONE: Rimosso 'display: flex' da qui. La modale è nascosta di default. */
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            margin: auto;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .modal-content h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .modal-content p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .modal-content ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .modal-content ul li {
+            background-color: var(--bg-input);
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .modal-content ul li span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .close-button {
+            color: var(--text-muted);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--text-light);
+        }
+
+        /* VLSM dynamic rows */
+        .vlsm-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .vlsm-row input {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        .vlsm-row .remove-btn {
+            background: var(--error-color);
+            padding: 8px 12px;
+            font-size: 14px;
+            min-width: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            .header-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+            .tabs {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">Hub Applicazioni di Rete</div>
+        <div class="header-right">
+            <span id="current-datetime"></span>
+            <div class="db-status">
+                <span class="db-status-indicator"></span>
+                <span>DB: Online</span>
+                <button onclick="toggleDbStatus()">Cambia</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Tab di navigazione -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'calc-ip-prefix')">Subnet IPv4</button>
+            <button class="tab-button" onclick="openTab(event, 'calc-hosts')">Host IPv4</button>
+            <button class="tab-button" onclick="openTab(event, 'calc-vlsm')">VLSM</button>
+            <button class="tab-button" onclick="openTab(event, 'calc-supernet')">Supernetting</button>
+            <button class="tab-button" onclick="openTab(event, 'calc-wildcard')">Wildcard</button>
+            <button class="tab-button" onclick="openTab(event, 'calc-ipv6')">Subnet IPv6</button>
+            <button class="tab-button" onclick="openTab(event, 'util-mac')">MAC Util</button>
+            <button class="tab-button" onclick="openTab(event, 'util-acl')">ACL Gen</button>
+        </div>
+
+        <!-- #region CONTENUTO TABS -->
+        
+        <!-- Contenuto del tab "Calcola da IP/Prefisso" -->
+        <div id="calc-ip-prefix" class="tab-content active">
+            <h1>Calcolatore Subnet IPv4</h1>
+            <form id="subnetForm">
+                <div class="input-group">
+                    <label for="ipAddress">Indirizzo IP:</label>
+                    <input type="text" id="ipAddress" placeholder="Es: 192.168.1.0" required>
+                    <span class="error-message" id="ipAddress-error"></span>
+                </div>
+                <div class="input-group">
+                    <label for="prefix">Prefisso CIDR:</label>
+                    <select id="prefix" required></select>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="calculateSubnet()">Calcola</button>
+                    <button type="button" class="btn-secondary" onclick="clearResults()">Cancella</button>
+                    <button type="button" class="btn-secondary" onclick="copyToClipboard()">Copia Risultati</button>
+                    <button type="button" class="btn-secondary" onclick="exportToTxt()">Esporta TXT</button>
+                    <button type="button" class="btn-secondary" onclick="openCidrLegendModal()">Legenda CIDR</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Contenuto del tab "Calcola da Host" -->
+        <div id="calc-hosts" class="tab-content">
+            <h1>Calcolatore da Numero Host</h1>
+            <form id="hostsForm">
+                <div class="input-group">
+                    <label for="ipAddressHosts">Indirizzo IP di Rete (Opzionale):</label>
+                    <input type="text" id="ipAddressHosts" placeholder="Es: 192.168.1.0">
+                    <span class="error-message" id="ipAddressHosts-error"></span>
+                </div>
+                <div class="input-group">
+                    <label for="numHosts">Numero di Host Desiderati:</label>
+                    <input type="number" id="numHosts" min="0" placeholder="Es: 50" required>
+                    <span class="error-message" id="numHosts-error"></span>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="calculateByHosts()">Calcola</button>
+                    <button type="button" class="btn-secondary" onclick="clearHostsResults()">Cancella</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Contenuto del tab "Calcolatore VLSM" -->
+        <div id="calc-vlsm" class="tab-content">
+            <h1>Calcolatore VLSM <i class="fa-solid fa-circle-info info-icon" onclick="showInfoModal('Calcolatore VLSM', 'Il calcolatore VLSM (Variable Length Subnet Mask) permette di allocare lo spazio di indirizzamento IP in modo efficiente. Invece di usare una singola subnet mask per tutte le sottoreti, VLSM ne usa di diverse per adattarsi perfettamente al numero di host richiesti da ogni sottorete, minimizzando gli sprechi.')"></i></h1>
+            <form id="vlsmForm">
+                <div class="input-group">
+                    <label for="vlsmBaseIp">Blocco IP di partenza (es. 192.168.0.0/24):</label>
+                    <input type="text" id="vlsmBaseIp" placeholder="192.168.0.0/24" required>
+                    <span class="error-message" id="vlsmBaseIp-error"></span>
+                </div>
+                <label>Sottoreti Richieste:</label>
+                <div id="vlsm-subnets-container">
+                    <!-- Le righe dinamiche verranno aggiunte qui -->
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="addVlsmSubnetRow()">+ Aggiungi Subnet</button>
+                    <button type="button" onclick="calculateVlsm()">Calcola VLSM</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Contenuto del tab "Supernetting" -->
+        <div id="calc-supernet" class="tab-content">
+            <h1>Calcolatore di Supernetting <i class="fa-solid fa-circle-info info-icon" onclick="showInfoModal('Calcolatore di Supernetting', 'La Supernetting (o aggregazione di rotte) è il processo inverso del subnetting. Permette di combinare più reti contigue in una singola rotta più grande. Questo è fondamentale per ridurre la dimensione delle tabelle di routing nei router, migliorando le prestazioni e la stabilità della rete.')"></i></h1>
+            <form id="supernetForm">
+                <div class="input-group">
+                    <label for="supernetAddresses">Indirizzi di Rete (uno per riga):</label>
+                    <textarea id="supernetAddresses" placeholder="192.168.4.0/24&#10;192.168.5.0/24&#10;192.168.6.0/24&#10;192.168.7.0/24" required></textarea>
+                    <span class="error-message" id="supernetAddresses-error"></span>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="calculateSupernet()">Aggrega Rotte</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Contenuto del tab "Wildcard Mask" -->
+        <div id="calc-wildcard" class="tab-content">
+            <h1>Calcolatore Wildcard Mask <i class="fa-solid fa-circle-info info-icon" onclick="showInfoModal('Calcolatore Wildcard Mask', 'La wildcard mask è un valore usato principalmente nelle Access Control List (ACL) e in alcuni protocolli di routing (come OSPF) per specificare un range di indirizzi IP. È l\'inverso di una subnet mask e indica quali bit di un indirizzo IP devono essere controllati.')"></i></h1>
+            <form id="wildcardForm">
+                <div class="input-group">
+                    <label for="wildcardSubnetMask">Subnet Mask:</label>
+                    <input type="text" id="wildcardSubnetMask" placeholder="255.255.255.0" required>
+                    <span class="error-message" id="wildcardSubnetMask-error"></span>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="calculateWildcard()">Calcola Wildcard</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Contenuto del tab "Subnet IPv6" -->
+        <div id="calc-ipv6" class="tab-content">
+            <h1>Calcolatore Subnet IPv6 <i class="fa-solid fa-circle-info info-icon" onclick="showInfoModal('Calcolatore Subnet IPv6', 'Questo strumento aiuta a gestire lo spazio di indirizzamento IPv6. La funzione più comune è suddividere un prefisso più grande (es. un /48 fornito dal provider) in sottoreti più piccole (tipicamente /64) da assegnare alle varie VLAN o segmenti di rete locali.')"></i></h1>
+            <form id="ipv6Form">
+                <div class="input-group">
+                    <label for="ipv6Prefix">Prefisso IPv6 (es. 2001:db8:acad::/48):</label>
+                    <input type="text" id="ipv6Prefix" placeholder="2001:db8:acad::/48" required>
+                    <span class="error-message" id="ipv6Prefix-error"></span>
+                </div>
+                <div class="input-group">
+                    <label for="ipv6SubnetSize">Dimensione Subnet desiderata:</label>
+                    <input type="number" id="ipv6SubnetSize" value="64" min="1" max="128" required>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="calculateIpv6Subnets()">Genera Subnet</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Contenuto del tab "MAC Util" -->
+        <div id="util-mac" class="tab-content">
+            <h1>Utility MAC Address <i class="fa-solid fa-circle-info info-icon" onclick="showInfoModal('Utility MAC Address', 'Questo strumento converte un indirizzo MAC tra i formati più comuni (es. Cisco, Microsoft, standard IEEE). Inoltre, analizzando i primi 3 byte (OUI), identifica il produttore (vendor) della scheda di rete, un\'informazione utile per il troubleshooting.')"></i></h1>
+            <form id="macForm">
+                <div class="input-group">
+                    <label for="macAddress">Indirizzo MAC:</label>
+                    <input type="text" id="macAddress" placeholder="00:1B:63:84:45:E6" required>
+                    <span class="error-message" id="macAddress-error"></span>
+                </div>
+                <div class="button-group">
+                    <button type="button" onclick="convertMacAddress()">Analizza MAC</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Contenuto del tab "ACL Gen" -->
+        <div id="util-acl" class="tab-content">
+            <h1>Generatore ACL <i class="fa-solid fa-circle-info info-icon" onclick="showInfoModal('Generatore ACL', 'Questo strumento aiuta a creare comandi per Access Control List (ACL) in modo guidato. Selezionando vendor, azione, protocollo e indirizzi, genera la sintassi corretta del comando, riducendo la probabilità di errori di configurazione che potrebbero compromettere la sicurezza o la connettività della rete.')"></i></h1>
+            <p style="color: var(--text-muted); text-align: center;">(Funzionalità in fase di sviluppo)</p>
+        </div>
+
+
+        <!-- #endregion -->
+
+        <!-- Sezione per la visualizzazione dei risultati -->
+        <div id="results-container">
+            <!-- I risultati dei vari calcolatori verranno iniettati qui -->
+        </div>
+    </div>
+
+    <!-- #region MODALI -->
+    <!-- Modale per la Legenda CIDR -->
+    <div id="cidrLegendModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeInfoModal()">&times;</span>
+            <h3>Legenda Prefissi CIDR</h3>
+            <ul>
+                <!-- Contenuto generato da JS -->
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Modale Informativa Generica -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeInfoModal()">&times;</span>
+            <h3 id="infoModalTitle"></h3>
+            <p id="infoModalText"></p>
+        </div>
+    </div>
+    <!-- #endregion -->
+
+    <script>
+        // #region LOGICA ESISTENTE E HELPER
+        const subnetMasks = [
+            "0.0.0.0", "128.0.0.0", "192.0.0.0", "224.0.0.0", "240.0.0.0", "248.0.0.0", "252.0.0.0", "254.0.0.0", "255.0.0.0",
+            "255.128.0.0", "255.192.0.0", "255.224.0.0", "255.240.0.0", "255.248.0.0", "255.252.0.0", "255.254.0.0", "255.255.0.0",
+            "255.255.128.0", "255.255.192.0", "255.255.224.0", "255.255.240.0", "255.255.248.0", "255.255.252.0", "255.255.254.0",
+            "255.255.255.0", "255.255.255.128", "255.255.255.192", "255.255.255.224", "255.255.255.240", "255.255.255.248", "255.255.255.252",
+            "255.255.255.254", "255.255.255.255"
+        ];
+        
+        function populatePrefixDropdown() {
+            const selectElement = document.getElementById('prefix');
+            for (let i = 0; i <= 32; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `/${i} (${subnetMasks[i]})`;
+                selectElement.appendChild(option);
+            }
+            selectElement.value = 24;
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('current-datetime').textContent = now.toLocaleDateString('it-IT', options);
+        }
+        setInterval(updateDateTime, 1000);
+        
+        function toggleDbStatus() {
+            const indicator = document.querySelector('.db-status-indicator');
+            const statusText = indicator.nextElementSibling;
+            if (getComputedStyle(indicator).backgroundColor === 'rgb(0, 184, 148)') {
+                indicator.style.backgroundColor = 'var(--error-color)';
+                statusText.textContent = 'DB: Offline';
+            } else {
+                indicator.style.backgroundColor = 'var(--primary-color)';
+                statusText.textContent = 'DB: Online';
+            }
+        }
+
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+            clearAllResults();
+        }
+
+        function validateIP(ip) {
+            const regex = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+            return regex.test(ip);
+        }
+        
+        function ipToLong(ip) {
+            return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0;
+        }
+
+        function longToIp(long) {
+            return [ (long >>> 24), (long >>> 16) & 255, (long >>> 8) & 255, long & 255 ].join('.');
+        }
+
+        function ipToBinary(ip) {
+            return ip.split('.').map(octet => parseInt(octet).toString(2).padStart(8, '0')).join('');
+        }
+
+        function binaryToIp(binary) {
+            return binary.match(/.{8}/g).map(bin => parseInt(bin, 2)).join('.');
+        }
+
+        function getAddressClass(ip) {
+            const firstOctet = parseInt(ip.split('.')[0]);
+            if (firstOctet >= 1 && firstOctet <= 126) return 'A';
+            if (firstOctet >= 128 && firstOctet <= 191) return 'B';
+            if (firstOctet >= 192 && firstOctet <= 223) return 'C';
+            if (firstOctet >= 224 && firstOctet <= 239) return 'D (Multicast)';
+            if (firstOctet >= 240 && firstOctet <= 255) return 'E (Sperimentale)';
+            return 'N/A';
+        }
+
+        function getAddressType(ip) {
+            const privateRanges = [/^10\./, /^172\.(1[6-9]|2[0-9]|3[0-1])\./, /^192\.168\./, /^169\.254\./];
+            const specialRanges = [/^0\./, /^127\./, /^224\./, /^240\./];
+            if (privateRanges.some(regex => regex.test(ip))) return 'Privato';
+            if (specialRanges.some(regex => regex.test(ip))) return 'Riservato/Speciale';
+            return 'Pubblico';
+        }
+
+        function clearAllErrors() {
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        }
+
+        function clearAllResults() {
+            document.getElementById('results-container').innerHTML = '';
+        }
+        
+        // #endregion
+
+        // #region LOGICA MODALI
+        function openCidrLegendModal() {
+            const modal = document.getElementById('cidrLegendModal');
+            const ul = modal.querySelector('ul');
+            if(ul.children.length === 0) {
+                for(let i=0; i<=32; i++){
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>/${i}:</span> ${subnetMasks[i]}`;
+                    ul.appendChild(li);
+                }
+            }
+            modal.style.display = 'flex';
+        }
+        
+        function showInfoModal(title, text) {
+            document.getElementById('infoModalTitle').textContent = title;
+            document.getElementById('infoModalText').textContent = text;
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+        
+        // NUOVA FUNZIONE per mostrare alert personalizzati
+        function showAlertModal(message) {
+             showInfoModal('Notifica', message);
+        }
+        
+        function closeInfoModal() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+        
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+        // #endregion
+
+        // #region CALCOLATORE SUBNET IPV4 (ORIGINALE)
+        function calculateSubnet() {
+            clearAllErrors();
+            clearAllResults();
+            const ipAddress = document.getElementById('ipAddress').value;
+            const prefix = parseInt(document.getElementById('prefix').value);
+            const errorEl = document.getElementById('ipAddress-error');
+
+            if (!validateIP(ipAddress)) {
+                errorEl.textContent = 'Formato IP non valido.';
+                return;
+            }
+
+            const ipLong = ipToLong(ipAddress);
+            const mask = (0xFFFFFFFF << (32 - prefix)) >>> 0;
+            const networkLong = ipLong & mask;
+            const broadcastLong = networkLong | (~mask >>> 0);
+            
+            const networkAddress = longToIp(networkLong);
+            const broadcastAddress = longToIp(broadcastLong);
+            const totalIPs = Math.pow(2, 32 - prefix);
+            
+            let firstHost = 'N/A', lastHost = 'N/A', usableIPRange = 'N/A';
+            if (totalIPs > 2) {
+                firstHost = longToIp(networkLong + 1);
+                lastHost = longToIp(broadcastLong - 1);
+                usableIPRange = `${firstHost} - ${lastHost}`;
+            } else if (totalIPs === 2) {
+                firstHost = networkAddress;
+                lastHost = broadcastAddress;
+                usableIPRange = `${firstHost} - ${lastHost}`;
+            } else if (totalIPs === 1) {
+                firstHost = lastHost = usableIPRange = networkAddress;
+            }
+
+            const resultsHTML = `
+                <div class="results" id="results">
+                    <h2>Risultati:</h2>
+                    <p><strong>Subnet Mask:</strong> <span>${subnetMasks[prefix]}</span></p>
+                    <p><strong>Prefisso CIDR:</strong> <span>/${prefix}</span></p>
+                    <p><strong>Indirizzo di rete:</strong> <span>${networkAddress}</span></p>
+                    <p><strong>Indirizzo di broadcast:</strong> <span>${broadcastAddress}</span></p>
+                    <p><strong>Primo host utilizzabile:</strong> <span>${firstHost}</span></p>
+                    <p><strong>Ultimo host utilizzabile:</strong> <span>${lastHost}</span></p>
+                    <p><strong>Range di indirizzi utilizzabili:</strong> <span>${usableIPRange}</span></p>
+                    <p><strong>Numero totale di IP:</strong> <span>${totalIPs}</span></p>
+                    <p><strong>Classe di indirizzamento:</strong> <span>${getAddressClass(ipAddress)}</span></p>
+                    <p><strong>Tipo di indirizzo:</strong> <span>${getAddressType(ipAddress)}</span></p>
+                    <p><strong>Gateway predefinito suggerito:</strong> <span>${firstHost}</span></p>
+                </div>`;
+            document.getElementById('results-container').innerHTML = resultsHTML;
+        }
+        
+        function clearResults() {
+            document.getElementById('subnetForm').reset();
+            document.getElementById('prefix').value = '24';
+            clearAllErrors();
+            clearAllResults();
+        }
+        
+        function getResultsText() {
+            const resultsDiv = document.querySelector('#results-container .results, #results-container .results-table');
+            if (!resultsDiv) return 'Nessun risultato da copiare/esportare.';
+            
+            let text = "Risultati Calcolatore:\n\n";
+            if(resultsDiv.classList.contains('results')){
+                resultsDiv.querySelectorAll('p').forEach(p => {
+                    const strongText = p.querySelector('strong')?.textContent || '';
+                    const spanText = p.querySelector('span')?.textContent || '';
+                    if (strongText && spanText) text += `${strongText} ${spanText}\n`;
+                });
+            } else {
+                const headers = Array.from(resultsDiv.querySelectorAll('th')).map(th => th.textContent);
+                const rows = resultsDiv.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const cells = Array.from(row.querySelectorAll('td')).map(td => td.textContent);
+                    headers.forEach((header, index) => {
+                        text += `${header}: ${cells[index]}\n`;
+                    });
+                    text += '---\n';
+                });
+            }
+            return text;
+        }
+
+        function copyToClipboard() {
+            const text = getResultsText();
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = text;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showAlertModal('Risultati copiati negli appunti!');
+            } catch (err) {
+                showAlertModal('Errore nella copia dei risultati.');
+            } finally {
+                document.body.removeChild(tempTextArea);
+            }
+        }
+
+        function exportToTxt() {
+            const text = getResultsText();
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'risultati_rete.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function calculateByHosts() {
+            clearAllErrors();
+            clearAllResults();
+            const ipAddress = document.getElementById('ipAddressHosts').value;
+            const numHosts = parseInt(document.getElementById('numHosts').value);
+            const ipErrorEl = document.getElementById('ipAddressHosts-error');
+            const hostErrorEl = document.getElementById('numHosts-error');
+
+            if (isNaN(numHosts) || numHosts < 0) {
+                hostErrorEl.textContent = 'Il numero di host deve essere un numero intero >= 0.';
+                return;
+            }
+            if (ipAddress && !validateIP(ipAddress)) {
+                ipErrorEl.textContent = 'Formato IP non valido.';
+                return;
+            }
+
+            let neededSize = numHosts > 0 ? numHosts + 2 : 1;
+            let prefix = 32 - Math.ceil(Math.log2(neededSize));
+            
+            if(prefix < 0) prefix = 0;
+            
+            document.getElementById('ipAddress').value = ipAddress || '0.0.0.0';
+            document.getElementById('prefix').value = prefix;
+            calculateSubnet();
+        }
+        
+        function clearHostsResults() {
+            document.getElementById('hostsForm').reset();
+            clearAllErrors();
+            clearAllResults();
+        }
+        // #endregion
+
+        // #region CALCOLATORE VLSM
+        function addVlsmSubnetRow() {
+            const container = document.getElementById('vlsm-subnets-container');
+            const row = document.createElement('div');
+            row.className = 'vlsm-row';
+            row.innerHTML = `
+                <input type="text" class="vlsm-name" placeholder="Nome Subnet (es. Ufficio A)">
+                <input type="number" class="vlsm-hosts" placeholder="N. Host (es. 50)" min="1">
+                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">X</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function calculateVlsm() {
+            clearAllErrors();
+            clearAllResults();
+            const baseIpInput = document.getElementById('vlsmBaseIp').value;
+            const baseIpErrorEl = document.getElementById('vlsmBaseIp-error');
+            
+            const [baseIp, basePrefixStr] = baseIpInput.split('/');
+            if (!validateIP(baseIp) || isNaN(parseInt(basePrefixStr))) {
+                baseIpErrorEl.textContent = 'Formato blocco IP non valido (es. 192.168.0.0/24).';
+                return;
+            }
+            const basePrefix = parseInt(basePrefixStr);
+
+            let subnets = [];
+            const rows = document.querySelectorAll('.vlsm-row');
+            rows.forEach((row, index) => {
+                const name = row.querySelector('.vlsm-name').value || `Subnet ${index + 1}`;
+                const hosts = parseInt(row.querySelector('.vlsm-hosts').value);
+                if (!isNaN(hosts) && hosts > 0) {
+                    subnets.push({ name, hosts });
+                }
+            });
+
+            if (subnets.length === 0) {
+                baseIpErrorEl.textContent = 'Aggiungere almeno una subnet valida.';
+                return;
+            }
+
+            subnets.forEach(s => {
+                const neededSize = s.hosts + 2;
+                s.prefix = 32 - Math.ceil(Math.log2(neededSize));
+                s.totalIps = Math.pow(2, 32 - s.prefix);
+            });
+
+            subnets.sort((a, b) => b.hosts - a.hosts);
+
+            let currentIpLong = ipToLong(baseIp);
+            const baseMask = (0xFFFFFFFF << (32 - basePrefix)) >>> 0;
+            const baseNetworkLong = currentIpLong & baseMask;
+            const baseBroadcastLong = baseNetworkLong | (~baseMask >>> 0);
+            
+            currentIpLong = baseNetworkLong;
+
+            let results = [];
+            let allocationPossible = true;
+
+            for (const subnet of subnets) {
+                if (currentIpLong + subnet.totalIps > baseBroadcastLong + 1) {
+                    allocationPossible = false;
+                    break;
+                }
+                
+                const networkLong = currentIpLong;
+                const broadcastLong = currentIpLong + subnet.totalIps - 1;
+                const firstHost = longToIp(networkLong + 1);
+                const lastHost = longToIp(broadcastLong - 1);
+
+                results.push({
+                    name: subnet.name,
+                    hosts: subnet.hosts,
+                    assignedNetwork: `${longToIp(networkLong)}/${subnet.prefix}`,
+                    range: `${firstHost} - ${lastHost}`,
+                    broadcast: longToIp(broadcastLong)
+                });
+
+                currentIpLong += subnet.totalIps;
+            }
+
+            if (!allocationPossible) {
+                baseIpErrorEl.textContent = 'Spazio di indirizzamento insufficiente nel blocco IP di partenza per allocare tutte le subnet richieste.';
+                return;
+            }
+            
+            let tableHTML = `
+                <div class="results-table">
+                    <h2>Risultati VLSM:</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome Subnet</th>
+                                <th>Host Richiesti</th>
+                                <th>Rete Assegnata</th>
+                                <th>Range Utilizzabile</th>
+                                <th>Broadcast</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+            results.forEach(r => {
+                tableHTML += `
+                    <tr>
+                        <td><strong>${r.name}</strong></td>
+                        <td>${r.hosts}</td>
+                        <td>${r.assignedNetwork}</td>
+                        <td>${r.range}</td>
+                        <td>${r.broadcast}</td>
+                    </tr>`;
+            });
+            tableHTML += `</tbody></table></div>`;
+            document.getElementById('results-container').innerHTML = tableHTML;
+        }
+        // #endregion
+
+        // #region CALCOLATORE SUPERNETTING
+        function calculateSupernet() {
+            clearAllErrors();
+            clearAllResults();
+            const addressesText = document.getElementById('supernetAddresses').value.trim();
+            const errorEl = document.getElementById('supernetAddresses-error');
+            
+            if (!addressesText) {
+                errorEl.textContent = 'Inserire almeno un indirizzo di rete.';
+                return;
+            }
+            
+            const addresses = addressesText.split('\n').map(line => line.trim()).filter(line => line);
+            const binaryAddresses = [];
+
+            for (const addr of addresses) {
+                const [ip, prefix] = addr.split('/');
+                if (!validateIP(ip) || isNaN(parseInt(prefix))) {
+                    errorEl.textContent = `Formato non valido per "${addr}". Usare IP/Prefisso.`;
+                    return;
+                }
+                binaryAddresses.push(ipToBinary(ip));
+            }
+
+            if (binaryAddresses.length < 2) {
+                errorEl.textContent = 'Sono necessari almeno due indirizzi per l\'aggregazione.';
+                return;
+            }
+
+            let commonBits = '';
+            for (let i = 0; i < 32; i++) {
+                const bit = binaryAddresses[0][i];
+                if (binaryAddresses.every(bAddr => bAddr[i] === bit)) {
+                    commonBits += bit;
+                } else {
+                    break;
+                }
+            }
+
+            const supernetPrefix = commonBits.length;
+            const supernetBinary = commonBits.padEnd(32, '0');
+            const supernetAddress = binaryToIp(supernetBinary);
+
+            const resultsHTML = `
+                <div class="results">
+                    <h2>Rotta Aggregata:</h2>
+                    <p style="font-size: 24px; text-align: center; color: var(--primary-color);">
+                        <strong>${supernetAddress}/${supernetPrefix}</strong>
+                    </p>
+                </div>`;
+            document.getElementById('results-container').innerHTML = resultsHTML;
+        }
+        // #endregion
+        
+        // #region CALCOLATORE WILDCARD
+        function calculateWildcard() {
+            clearAllErrors();
+            clearAllResults();
+            const subnetMask = document.getElementById('wildcardSubnetMask').value;
+            const errorEl = document.getElementById('wildcardSubnetMask-error');
+
+            if (!validateIP(subnetMask)) {
+                errorEl.textContent = 'Formato subnet mask non valido.';
+                return;
+            }
+
+            const octets = subnetMask.split('.').map(Number);
+            const wildcardOctets = octets.map(octet => 255 - octet);
+            const wildcardMask = wildcardOctets.join('.');
+
+            const resultsHTML = `
+                <div class="results">
+                    <h2>Wildcard Mask:</h2>
+                    <p style="font-size: 24px; text-align: center; color: var(--primary-color);">
+                        <strong>${wildcardMask}</strong>
+                    </p>
+                </div>`;
+            document.getElementById('results-container').innerHTML = resultsHTML;
+        }
+        // #endregion
+
+        // #region CALCOLATORE IPV6
+        function calculateIpv6Subnets() {
+             showAlertModal('Funzionalità in fase di sviluppo');
+        }
+        // #endregion
+        
+        // #region UTILITY MAC ADDRESS
+        const ouiDb = {
+            "00000C": "Cisco Systems, Inc", "00005E": "ICANN", "000142": "Cisco Systems, Inc", "001B63": "Cisco Systems, Inc",
+            "00A0C9": "Intel Corporation", "001C42": "Microsoft Corporation", "005056": "VMware, Inc.", "000C29": "VMware, Inc.",
+            "080027": "Oracle Corporation (VirtualBox)", "F875A4": "Dell Inc.", "D4BED9": "Dell Inc.", "3C5282": "Hewlett Packard",
+            "B499BA": "Hewlett Packard Enterprise", "001422": "Hewlett Packard", "00059A": "IBM Corp", "88B4A6": "Apple, Inc.",
+            "F8E079": "Apple, Inc.", "D8C0A6": "Apple, Inc."
+        };
+
+        function convertMacAddress() {
+            clearAllErrors();
+            clearAllResults();
+            const macInput = document.getElementById('macAddress').value;
+            const errorEl = document.getElementById('macAddress-error');
+
+            const cleanMac = macInput.replace(/[^a-fA-F0-9]/g, '').toUpperCase();
+            if (cleanMac.length !== 12) {
+                errorEl.textContent = 'Formato MAC Address non valido. Deve contenere 12 caratteri esadecimali.';
+                return;
+            }
+
+            const oui = cleanMac.substring(0, 6);
+            const vendor = ouiDb[oui] || 'Sconosciuto';
+
+            const formats = {
+                "Standard (IEEE):": `${cleanMac.substring(0,2)}:${cleanMac.substring(2,4)}:${cleanMac.substring(4,6)}:${cleanMac.substring(6,8)}:${cleanMac.substring(8,10)}:${cleanMac.substring(10,12)}`,
+                "Cisco:": `${cleanMac.substring(0,4)}.${cleanMac.substring(4,8)}.${cleanMac.substring(8,12)}`,
+                "Microsoft:": `${cleanMac.substring(0,2)}-${cleanMac.substring(2,4)}-${cleanMac.substring(4,6)}-${cleanMac.substring(6,8)}-${cleanMac.substring(8,10)}-${cleanMac.substring(10,12)}`
+            };
+            
+            let resultsHTML = `
+                <div class="results">
+                    <h2>Analisi MAC Address:</h2>
+                    <p><strong>Vendor (OUI):</strong> <span>${vendor} (${oui})</span></p>
+                    <h3>Formati Comuni:</h3>`;
+            for (const [key, value] of Object.entries(formats)) {
+                resultsHTML += `<p><strong>${key}</strong> <span>${value}</span></p>`;
+            }
+            resultsHTML += `</div>`;
+            document.getElementById('results-container').innerHTML = resultsHTML;
+        }
+        // #endregion
+        
+        // #region INIZIALIZZAZIONE
+        document.addEventListener('DOMContentLoaded', () => {
+            populatePrefixDropdown();
+            updateDateTime();
+            addVlsmSubnetRow();
+        });
+        // #endregion
+
+    </script>
+</body>
+</html>
